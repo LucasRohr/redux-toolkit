@@ -18,10 +18,16 @@ export type RootStackParamList = {
 const Drawer = createDrawerNavigator<RootStackParamList>();
 
 export default function Routes() {
+  const [usuarioLogado, setUsuarioLogado] = useState<Usuario | undefined>();
+
   return (
     <Drawer.Navigator
       drawerContent={props =>
-        <DrawerContent {...props} />
+        <DrawerContent
+          {...props}
+          usuarioLogado={usuarioLogado}
+          setUsuarioLogado={setUsuarioLogado}
+        />
       }
       screenOptions={{
         header: Menu,
@@ -29,16 +35,16 @@ export default function Routes() {
       }}
     >
       <Drawer.Screen name='Home'>
-        {(props) => <Home {...props} />}
+        {(props) => <Home {...props} usuarioLogado={usuarioLogado} />}
       </Drawer.Screen>
       <Drawer.Screen name='Login'>
-        {(props) => <Login {...props} />}
+        {(props) => <Login {...props} setUsuarioLogado={setUsuarioLogado} />}
       </Drawer.Screen>
       <Drawer.Screen name='Cadastrar'>
-        {(props) => <Cadastrar {...props} />}
+        {(props) => <Cadastrar {...props} setUsuarioLogado={setUsuarioLogado} />}
       </Drawer.Screen>
       <Drawer.Screen name='Perfil'>
-        {(props) => <Perfil {...props} />}
+        {(props) => <Perfil {...props} usuarioLogado={usuarioLogado as Usuario} setUsuarioLogado={setUsuarioLogado} />}
       </Drawer.Screen>
     </Drawer.Navigator>
   )

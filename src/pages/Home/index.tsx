@@ -13,18 +13,14 @@ import { filtrarViagens, filtrosEstaoVazios } from './utils/filtros';
 import banner from 'assets/home/banner.png';
 import loading from 'assets/loading.png';
 
-import { Filtros } from './types';
+import { Filtros, HomeProps } from './types';
 import StringPicker from 'src/components/StringPicker';
 import useSnackbar from 'src/contexts/Snackbar';
 
 import styles from './styles';
 import { valoresPadrao } from './consts';
-import { useSelector } from 'react-redux';
-import { RootState } from 'src/store';
-import { DrawerScreenProps } from '@react-navigation/drawer';
-import { RootStackParamList } from 'src/routes';
 
-export default function Home(props: DrawerScreenProps<RootStackParamList, "Home">) {
+export default function Home({ usuarioLogado }: HomeProps) {
   const totalPaginasRef = useRef<number>(1);
   const todasAsViagens = useRef<Viagem[]>([]);
   const [paginaAtual, setPaginaAtual] = useState<number>(1);
@@ -40,7 +36,6 @@ export default function Home(props: DrawerScreenProps<RootStackParamList, "Home"
   const [buscando, setBuscando] = useState<boolean>(false);
   const [filtrarPorUsuario, setFiltrarPorUsuario] = useState<Filtros['filtrarPorUsuario']>(valoresPadrao.filtrarPorUsuario);
   const { criarMensagem } = useSnackbar();
-  const usuarioLogado = useSelector((state: RootState) => state.usuario.usuarioLogado);
   const { cidade = '', estado = '' } = usuarioLogado || {};
   const filtros: Filtros = {
     pessoas, tipo, origem, destino, filtrarPorUsuario, dataIda, dataVolta

@@ -11,11 +11,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.jornadamilhas"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,7 +28,11 @@
     },
     "plugins": [
       "expo-build-properties",
-      "expo-community-flipper"
+      {
+        "ios": {
+          "flipper": true
+        }
+      }
     ],
     "extra": {
       "eas": {

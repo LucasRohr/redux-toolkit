@@ -2,18 +2,20 @@ import { Text, View } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView } from '@react-navigation/drawer';
 import { Button, Drawer } from 'react-native-paper';
 
+import { Usuario } from 'src/types/usuario';
+
 import styles from './styles';
 import theme from 'src/config/theme';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'src/store';
-import { deslogar } from 'src/store/reducers/usuario';
+import { Dispatch, SetStateAction } from 'react';
+interface DrawerContentProps extends DrawerContentComponentProps {
+  usuarioLogado?: Usuario,
+  setUsuarioLogado: Dispatch<SetStateAction<Usuario | undefined>>
+}
 
-export default function DrawerContent({ navigation }: DrawerContentComponentProps) {
-  const dispatch = useDispatch();
-  const usuarioLogado = useSelector((state: RootState) => state.usuario.usuarioLogado);
+export default function DrawerContent({ navigation, usuarioLogado, setUsuarioLogado }: DrawerContentProps) {
 
-  const handleDeslogar = () => {
-    dispatch(deslogar());
+  const deslogar = () => {
+    setUsuarioLogado(undefined);
     navigation.closeDrawer();
   }
 
@@ -38,7 +40,7 @@ export default function DrawerContent({ navigation }: DrawerContentComponentProp
               icon='logout'
               mode='contained'
               buttonColor={theme.colors.error}
-              onPress={handleDeslogar}
+              onPress={deslogar}
             >
               Sair
             </Button>
