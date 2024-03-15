@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.jornadamilhas"
@@ -28,11 +30,7 @@
     },
     "plugins": [
       "expo-build-properties",
-      {
-        "ios": {
-          "flipper": true
-        }
-      }
+      "expo-community-flipper"
     ],
     "extra": {
       "eas": {

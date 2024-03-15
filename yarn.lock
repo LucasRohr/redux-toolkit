@@ -3830,6 +3830,14 @@ expo-build-properties@~0.6.0:
     ajv "^8.11.0"
     semver "^7.3.5"
 
+expo-community-flipper@^48.0.0:
+  version "48.0.0"
+  resolved "https://registry.yarnpkg.com/expo-community-flipper/-/expo-community-flipper-48.0.0.tgz#ae464f0b8dc073bf1457873201579fd1e6d6df47"
+  integrity sha512-wFKDEeGsatll6UiLtypaYlZCyFDS3z4sNmkHfei20ZipzIHMUWW44hca32tE1XAJ+3/Csx445C1cYElpNZ8sPg==
+  dependencies:
+    semver "^7.3.8"
+    ts-dedent "^2.2.0"
+
 expo-constants@~14.2.0, expo-constants@~14.2.1:
   version "14.2.1"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-14.2.1.tgz#b5b6b8079d2082c31ccf2cbc7cf97a0e83c229c3"
@@ -6325,10 +6333,10 @@ react-native-devsettings@^1.0.3:
   resolved "https://registry.yarnpkg.com/react-native-devsettings/-/react-native-devsettings-1.0.3.tgz#2d65527c6eea282c54f34429e5ffc666ed3327bb"
   integrity sha512-14d8YBO8pwFbXoqyT0/os1esnL+B84HPgF4RuKhLmRSSlvjzm6WFuOd1K4L6x1PhinaRUInOdIK+RomlzMaENg==
 
-react-native-flipper@^0.192.0:
-  version "0.192.0"
-  resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.192.0.tgz#963a4b36e85ba5dd927cc0a4020f466b1f5148e0"
-  integrity sha512-Ed8UsCU2cjheNBVtuoGQ6BoqMeWmX2U5Qo6Jx3gKRztpRGVkNj6idy1Ju3+MWNqNWFB7NKZ1XB70G2aXYe+4oQ==
+react-native-flipper@0.163.0:
+  version "0.163.0"
+  resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.163.0.tgz#3ede9fed252555d0ac3c6212e7ed6e5af3c85604"
+  integrity sha512-RG0yMlEMe/fYqaoUkhvW2HrqBuRYtq1K3me9y52RBFwPWooZTmUlWjIWGKT9VYVS9T2GGrUV9tpBA8pY9g7CSg==
 
 react-native-gesture-handler@~2.9.0:
   version "2.9.0"
@@ -7293,6 +7301,11 @@ traverse@~0.6.6:
   version "0.6.7"
   resolved "https://registry.yarnpkg.com/traverse/-/traverse-0.6.7.tgz#46961cd2d57dd8706c36664acde06a248f1173fe"
   integrity sha512-/y956gpUo9ZNCb99YjxG7OaslxZWHfCHAUUfshwqOXmxUIvqLjVO581BT+gM59+QV9tFe6/CGG53tsA1Y7RSdg==
+
+ts-dedent@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/ts-dedent/-/ts-dedent-2.2.0.tgz#39e4bd297cd036292ae2394eb3412be63f563bb5"
+  integrity sha512-q5W7tVM71e2xjHZTlgfTDoPF/SmqKG5hddq9SzR49CH2hayqRKJtQ4mtRlSxKaJlR/+9rEM+mnBHf7I2/BQcpQ==
 
 ts-interface-checker@^0.1.9:
   version "0.1.13"
