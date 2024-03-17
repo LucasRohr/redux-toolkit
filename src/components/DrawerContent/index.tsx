@@ -6,33 +6,35 @@ import { Usuario } from 'src/types/usuario';
 
 import styles from './styles';
 import theme from 'src/config/theme';
-import { Dispatch, SetStateAction } from 'react';
-interface DrawerContentProps extends DrawerContentComponentProps {
-  usuarioLogado?: Usuario,
-  setUsuarioLogado: Dispatch<SetStateAction<Usuario | undefined>>
-}
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'src/store';
+import { login } from 'src/store/slices/user';
 
-export default function DrawerContent({ navigation, usuarioLogado, setUsuarioLogado }: DrawerContentProps) {
+interface DrawerContentProps extends DrawerContentComponentProps {}
+
+export default function DrawerContent({ navigation }: DrawerContentProps) {
+  const dispatch = useDispatch()
+  const loggedUser = useSelector((state: RootState) => state.user.loggedUser)
 
   const deslogar = () => {
-    setUsuarioLogado(undefined);
+    dispatch(login(null));
     navigation.closeDrawer();
   }
 
   return (
     <DrawerContentScrollView>
       <Drawer.Section style={styles.container}>
-        {usuarioLogado && <Text style={styles.nome}> Olá {usuarioLogado?.nome}! </Text>}
+        {loggedUser && <Text style={styles.nome}> Olá {loggedUser?.nome}! </Text>}
         <Button icon='home' mode='contained' onPress={() => navigation.navigate('Home')}>
           Página inicial
         </Button>
-        {usuarioLogado && (
+        {loggedUser && (
           <Button icon='account' mode='contained' onPress={() => navigation.navigate('Perfil')}>
             Editar dados pessoais
           </Button>
         )}
       </Drawer.Section>
-      {usuarioLogado
+      {loggedUser
         ?
         (
           <View style={styles.container}>
