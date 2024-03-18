@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { View, Text, Image, ScrollView, Pressable } from 'react-native';
 import { Button, Card, Checkbox, TextInput, Title } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
 
 import { Genero, Usuario } from 'src/types/usuario';
 import { CadastrarProps } from './types';
-import { cadastrarUsuario } from 'src/services/usuarios';
 
 import banner from 'assets/cadastrar/banner.png';
 import DatePicker from 'src/components/DatePicker';
@@ -12,8 +12,9 @@ import useSnackbar from 'src/contexts/Snackbar';
 
 import styles from './styles';
 import GenderPicker from 'src/components/GenderPicker';
+import { register } from 'src/store/slices/user';
 
-export default function Cadastrar({ setUsuarioLogado, navigation }: CadastrarProps) {
+export default function Cadastrar({ navigation }: CadastrarProps) {
   const [nome, setNome] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
   const [genero, setGenero] = useState<Genero | undefined>();
@@ -26,7 +27,9 @@ export default function Cadastrar({ setUsuarioLogado, navigation }: CadastrarPro
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
   const [leu, setLeu] = useState(false);
+
   const { criarMensagem } = useSnackbar();
+  const dispatch = useDispatch()
 
   const handleSubmit = () => {
     if (!leu) return criarMensagem.erro('Você deve concordar com os termos de uso');
@@ -44,10 +47,16 @@ export default function Cadastrar({ setUsuarioLogado, navigation }: CadastrarPro
       senha
     }
 
-    const usuarioCadastrado = cadastrarUsuario(novoUsuario);
-    setUsuarioLogado(usuarioCadastrado);
-    criarMensagem.sucesso('Cadastro efetuado com sucesso!');
-    navigation.navigate('Home');
+    try {
+      dispatch(register(novoUsuario))
+
+      criarMensagem.sucesso('Cadastro efetuado com sucesso!');
+      navigation.navigate('Home');
+    } catch (error) {
+      if(error instanceof Error) {
+        criarMensagem.erro(error.message)
+      }
+    }
   }
 
   return (

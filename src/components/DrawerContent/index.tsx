@@ -2,8 +2,6 @@ import { Text, View } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView } from '@react-navigation/drawer';
 import { Button, Drawer } from 'react-native-paper';
 
-import { Usuario } from 'src/types/usuario';
-
 import styles from './styles';
 import theme from 'src/config/theme';
 import { useDispatch, useSelector } from 'react-redux';

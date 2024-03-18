@@ -2,6 +2,7 @@ import { Usuario } from "src/types/usuario";
 
 interface UserInitialStateInterface {
   loggedUser: Usuario | undefined;
+  users: Usuario[];
 }
 
 interface LoginUserPayloadInterface {
