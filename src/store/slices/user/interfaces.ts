@@ -5,13 +5,8 @@ interface UserInitialStateInterface {
 }
 
 interface LoginUserPayloadInterface {
-  emailOrCpf: string;
-  password: string;
+  emailOrCpf: Usuario["email"] | Usuario["cpf"];
+  password: Usuario["senha"];
 }
 
-interface LoginUserActionInterface {
-  type: string;
-  payload: LoginUserPayloadInterface | null;
-}
-
-export { UserInitialStateInterface, LoginUserActionInterface };
+export { UserInitialStateInterface, LoginUserPayloadInterface };

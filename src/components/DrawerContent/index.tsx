@@ -8,7 +8,7 @@ import styles from './styles';
 import theme from 'src/config/theme';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store';
-import { login } from 'src/store/slices/user';
+import { logout } from 'src/store/slices/user';
 
 interface DrawerContentProps extends DrawerContentComponentProps {}
 
@@ -17,7 +17,7 @@ export default function DrawerContent({ navigation }: DrawerContentProps) {
   const loggedUser = useSelector((state: RootState) => state.user.loggedUser)
 
   const deslogar = () => {
-    dispatch(login(null));
+    dispatch(logout());
     navigation.closeDrawer();
   }
 

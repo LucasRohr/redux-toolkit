@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { Action, PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { logar as loginService } from "src/services/usuarios";
 import {
-  LoginUserActionInterface,
+  LoginUserPayloadInterface,
   UserInitialStateInterface,
 } from "./interfaces";
 
@@ -13,7 +13,7 @@ const userSlice = createSlice({
   initialState,
   name: "user",
   reducers: {
-    login: (state, action: LoginUserActionInterface) => {
+    login: (state, action: PayloadAction<LoginUserPayloadInterface>) => {
       const payload = action.payload;
 
       if (payload) {
@@ -28,10 +28,13 @@ const userSlice = createSlice({
         state.loggedUser = undefined;
       }
     },
+    logout: (state) => {
+      state.loggedUser = undefined;
+    },
   },
 });
 
 const userReducer = userSlice.reducer;
 
 export { userReducer };
-export const { login } = userSlice.actions;
+export const { login, logout } = userSlice.actions;
