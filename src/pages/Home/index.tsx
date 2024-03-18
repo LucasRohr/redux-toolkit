@@ -1,71 +1,80 @@
-import { startTransition, useEffect, useRef, useState } from 'react';
-import { Image, SafeAreaView, ScrollView, Text, View } from 'react-native';
-import { Button, Card, Modal, Portal, Title, TouchableRipple } from 'react-native-paper';
-import { Picker } from '@react-native-picker/picker';
-import Icon from '@expo/vector-icons/Ionicons';
-import DatePicker from 'src/components/DatePicker';
+import { startTransition, useEffect, useRef, useState } from 'react'
+import { Image, SafeAreaView, ScrollView, Text, View } from 'react-native'
+import { Button, Card, Modal, Portal, Title, TouchableRipple } from 'react-native-paper'
+import { Picker } from '@react-native-picker/picker'
+import Icon from '@expo/vector-icons/Ionicons'
+import DatePicker from 'src/components/DatePicker'
 
-import { TipoViagem, Viagem } from 'src/types/viagem';
+import { TipoViagem, Viagem } from 'src/types/viagem'
 
-import { carregarDestinos, carregarOrigens, getViagens } from 'src/services/viagens';
-import { filtrarViagens, filtrosEstaoVazios } from './utils/filtros';
+import { carregarDestinos, carregarOrigens, getViagens } from 'src/services/viagens'
+import { filtrarViagens, filtrosEstaoVazios } from './utils/filtros'
 
-import banner from 'assets/home/banner.png';
-import loading from 'assets/loading.png';
+import banner from 'assets/home/banner.png'
+import loading from 'assets/loading.png'
 
-import { Filtros, HomeProps } from './types';
-import StringPicker from 'src/components/StringPicker';
-import useSnackbar from 'src/contexts/Snackbar';
+import { Filtros, HomeProps } from './types'
+import StringPicker from 'src/components/StringPicker'
+import useSnackbar from 'src/contexts/Snackbar'
 
-import styles from './styles';
-import { valoresPadrao } from './consts';
+import styles from './styles'
+import { valoresPadrao } from './consts'
+import { useSelector } from 'react-redux'
+import { RootState } from 'src/store'
 
-export default function Home({ usuarioLogado }: HomeProps) {
-  const totalPaginasRef = useRef<number>(1);
-  const todasAsViagens = useRef<Viagem[]>([]);
-  const [paginaAtual, setPaginaAtual] = useState<number>(1);
-  const [viagens, setViagens] = useState<Viagem[]>([]);
-  const [origens, setOrigens] = useState<string[]>([]);
-  const [destinos, setDestinos] = useState<string[]>([]);
-  const [tipo, setTipo] = useState<Filtros['tipo']>(valoresPadrao.tipo);
-  const [pessoas, setPessoas] = useState<Filtros['pessoas']>(valoresPadrao.pessoas);
-  const [origem, setOrigem] = useState<Filtros['origem']>(valoresPadrao.origem);
-  const [destino, setDestino] = useState<Filtros['destino']>(valoresPadrao.destino);
-  const [dataIda, setDataIda] = useState<Filtros['dataIda']>(valoresPadrao.dataIda);
-  const [dataVolta, setDataVolta] = useState<Filtros['dataVolta']>(valoresPadrao.dataVolta);
-  const [buscando, setBuscando] = useState<boolean>(false);
-  const [filtrarPorUsuario, setFiltrarPorUsuario] = useState<Filtros['filtrarPorUsuario']>(valoresPadrao.filtrarPorUsuario);
-  const { criarMensagem } = useSnackbar();
-  const { cidade = '', estado = '' } = usuarioLogado || {};
+export default function Home() {
+  const totalPaginasRef = useRef<number>(1)
+  const todasAsViagens = useRef<Viagem[]>([])
+  const [paginaAtual, setPaginaAtual] = useState<number>(1)
+  const [viagens, setViagens] = useState<Viagem[]>([])
+  const [origens, setOrigens] = useState<string[]>([])
+  const [destinos, setDestinos] = useState<string[]>([])
+  const [tipo, setTipo] = useState<Filtros['tipo']>(valoresPadrao.tipo)
+  const [pessoas, setPessoas] = useState<Filtros['pessoas']>(valoresPadrao.pessoas)
+  const [origem, setOrigem] = useState<Filtros['origem']>(valoresPadrao.origem)
+  const [destino, setDestino] = useState<Filtros['destino']>(valoresPadrao.destino)
+  const [dataIda, setDataIda] = useState<Filtros['dataIda']>(valoresPadrao.dataIda)
+  const [dataVolta, setDataVolta] = useState<Filtros['dataVolta']>(valoresPadrao.dataVolta)
+  const [buscando, setBuscando] = useState<boolean>(false)
+  const [filtrarPorUsuario, setFiltrarPorUsuario] = useState<Filtros['filtrarPorUsuario']>(
+    valoresPadrao.filtrarPorUsuario
+  )
+  const { criarMensagem } = useSnackbar()
+  const loggedUser = useSelector((state: RootState) => state.user.loggedUser)
+
+  const { cidade = '', estado = '' } = loggedUser || {}
   const filtros: Filtros = {
-    pessoas, tipo, origem, destino, filtrarPorUsuario, dataIda, dataVolta
-  };
-  const mostrarTodasAsViagens = filtrarPorUsuario === 'todas';
-  const mostrarViagensPorCidade = filtrarPorUsuario === 'cidade';
-  const mostrarViagensPorEstado = filtrarPorUsuario === 'estado';
-  const ehUltimaPagina = paginaAtual === totalPaginasRef.current;
+    pessoas,
+    tipo,
+    origem,
+    destino,
+    filtrarPorUsuario,
+    dataIda,
+    dataVolta,
+  }
+  const mostrarTodasAsViagens = filtrarPorUsuario === 'todas'
+  const mostrarViagensPorCidade = filtrarPorUsuario === 'cidade'
+  const mostrarViagensPorEstado = filtrarPorUsuario === 'estado'
+  const ehUltimaPagina = paginaAtual === totalPaginasRef.current
 
   const trocarOrigemDestino = () => {
-    const tmp = origem;
-    setOrigem(destino);
-    setDestino(tmp);
+    const tmp = origem
+    setOrigem(destino)
+    setDestino(tmp)
   }
 
-  const trocarTipo =
-    (novoTipo: TipoViagem) =>
-      () => setTipo(tipoAtual =>
-        novoTipo === tipoAtual ? undefined : novoTipo
-      );
+  const trocarTipo = (novoTipo: TipoViagem) => () =>
+    setTipo((tipoAtual) => (novoTipo === tipoAtual ? undefined : novoTipo))
 
   const carregarMais = async () => {
-    setBuscando(true);
-    const { novasViagens, pagina } = await getViagens(paginaAtual + 1);
-    todasAsViagens.current = [...todasAsViagens.current, ...novasViagens];
+    setBuscando(true)
+    const { novasViagens, pagina } = await getViagens(paginaAtual + 1)
+    todasAsViagens.current = [...todasAsViagens.current, ...novasViagens]
     startTransition(() => {
-      setPaginaAtual(pagina);
-      setViagens(viagensAtuais => [...viagensAtuais, ...novasViagens]);
+      setPaginaAtual(pagina)
+      setViagens((viagensAtuais) => [...viagensAtuais, ...novasViagens])
     })
-    setBuscando(false);
+    setBuscando(false)
   }
 
   const carregarDados = async () => {
@@ -73,50 +82,48 @@ export default function Home({ usuarioLogado }: HomeProps) {
       getViagens(),
       carregarOrigens(),
       carregarDestinos(),
-    ]);
-    const { pagina, totalPaginas, novasViagens } = viagensData;
-    totalPaginasRef.current = totalPaginas;
-    todasAsViagens.current = novasViagens;
+    ])
+    const { pagina, totalPaginas, novasViagens } = viagensData
+    totalPaginasRef.current = totalPaginas
+    todasAsViagens.current = novasViagens
     startTransition(() => {
-      setPaginaAtual(pagina);
-      setViagens(novasViagens);
-      setOrigens(novasOrigens);
-      setDestinos(novosDestinos);
+      setPaginaAtual(pagina)
+      setViagens(novasViagens)
+      setOrigens(novasOrigens)
+      setDestinos(novosDestinos)
     })
   }
 
-  const handleFiltrarPorUsuario = (
-    novoFiltroPorUsuario: Filtros['filtrarPorUsuario']
-  ) => () => {
-    const novaOrigem = novoFiltroPorUsuario === 'cidade' ? cidade : estado;
-    const deveFiltrarPorUsuario = mostrarTodasAsViagens || novaOrigem !== origem;
-    setFiltrarPorUsuario(deveFiltrarPorUsuario ? novoFiltroPorUsuario : 'todas');
-    setOrigem(deveFiltrarPorUsuario ? novaOrigem : '');
+  const handleFiltrarPorUsuario = (novoFiltroPorUsuario: Filtros['filtrarPorUsuario']) => () => {
+    const novaOrigem = novoFiltroPorUsuario === 'cidade' ? cidade : estado
+    const deveFiltrarPorUsuario = mostrarTodasAsViagens || novaOrigem !== origem
+    setFiltrarPorUsuario(deveFiltrarPorUsuario ? novoFiltroPorUsuario : 'todas')
+    setOrigem(deveFiltrarPorUsuario ? novaOrigem : '')
   }
 
   const handleResetar = () =>
     startTransition(() => {
-      setTipo(valoresPadrao.tipo);
-      setPessoas(valoresPadrao.pessoas);
-      setOrigem(valoresPadrao.origem);
-      setDestino(valoresPadrao.destino);
-      setDataIda(valoresPadrao.dataIda);
-      setDataVolta(valoresPadrao.dataVolta);
-      setFiltrarPorUsuario(valoresPadrao.filtrarPorUsuario);
-    });
+      setTipo(valoresPadrao.tipo)
+      setPessoas(valoresPadrao.pessoas)
+      setOrigem(valoresPadrao.origem)
+      setDestino(valoresPadrao.destino)
+      setDataIda(valoresPadrao.dataIda)
+      setDataVolta(valoresPadrao.dataVolta)
+      setFiltrarPorUsuario(valoresPadrao.filtrarPorUsuario)
+    })
 
-  useEffect(() => void carregarDados(), []);
+  useEffect(() => void carregarDados(), [])
 
   const handleBuscar = async () => {
-    setBuscando(true);
-    let novasViagens = [];
-    const filtrosVazios = filtrosEstaoVazios(filtros);
-    if (filtrosVazios) novasViagens = todasAsViagens.current;
-    else novasViagens = await filtrarViagens(todasAsViagens.current, filtros, cidade, estado);
-    setViagens(novasViagens);
-    if (!novasViagens.length) return criarMensagem.erro('nenhuma viagem encontrada');
-    if (!filtrosVazios) criarMensagem.sucesso(`${novasViagens.length} viagens encontradas`);
-    setBuscando(false);
+    setBuscando(true)
+    let novasViagens = []
+    const filtrosVazios = filtrosEstaoVazios(filtros)
+    if (filtrosVazios) novasViagens = todasAsViagens.current
+    else novasViagens = await filtrarViagens(todasAsViagens.current, filtros, cidade, estado)
+    setViagens(novasViagens)
+    if (!novasViagens.length) return criarMensagem.erro('nenhuma viagem encontrada')
+    if (!filtrosVazios) criarMensagem.sucesso(`${novasViagens.length} viagens encontradas`)
+    setBuscando(false)
   }
 
   return (
@@ -154,46 +161,46 @@ export default function Home({ usuarioLogado }: HomeProps) {
             <View style={styles.origemContainer}>
               <StringPicker
                 value={origem}
-                placeholder='Origem'
+                placeholder="Origem"
                 editable={mostrarTodasAsViagens}
                 selectTextOnFocus={mostrarTodasAsViagens}
                 onChangeText={setOrigem}
-                icon='airplane-takeoff'
+                icon="airplane-takeoff"
                 style={[styles.origem, !mostrarTodasAsViagens && styles.inputDisabled]}
                 options={origens}
               />
               <TouchableRipple style={styles.trocar} onPress={trocarOrigemDestino}>
-                <Icon name='swap-vertical' size={20} color='white' />
+                <Icon name="swap-vertical" size={20} color="white" />
               </TouchableRipple>
               <StringPicker
                 value={destino}
-                placeholder='Destino'
+                placeholder="Destino"
                 onChangeText={setDestino}
-                icon='airplane-landing'
+                icon="airplane-landing"
                 style={styles.destino}
                 options={destinos}
               />
             </View>
             <View style={styles.datas}>
-              <DatePicker label='Data de ida' value={dataIda} onChangeText={setDataIda} />
-              <DatePicker label='Data de volta' value={dataVolta} onChangeText={setDataVolta} />
+              <DatePicker label="Data de ida" value={dataIda} onChangeText={setDataIda} />
+              <DatePicker label="Data de volta" value={dataVolta} onChangeText={setDataVolta} />
             </View>
-            {usuarioLogado?.cidade && (
+            {loggedUser?.cidade && (
               <Button
-                mode='contained'
+                mode="contained"
                 style={styles.viagemPor}
-                textColor='black'
+                textColor="black"
                 onPress={handleFiltrarPorUsuario('cidade')}
                 icon={mostrarViagensPorCidade ? 'check' : ''}
               >
                 Viagens na minha cidade
               </Button>
             )}
-            {usuarioLogado?.estado && (
+            {loggedUser?.estado && (
               <Button
-                mode='contained'
+                mode="contained"
                 style={styles.viagemPor}
-                textColor='black'
+                textColor="black"
                 onPress={handleFiltrarPorUsuario('estado')}
                 icon={mostrarViagensPorEstado ? 'check' : ''}
               >
@@ -201,10 +208,10 @@ export default function Home({ usuarioLogado }: HomeProps) {
               </Button>
             )}
             <View style={styles.buscarContainer}>
-              <Button mode='contained' style={styles.botaoResetarBusca} onPress={handleResetar}>
+              <Button mode="contained" style={styles.botaoResetarBusca} onPress={handleResetar}>
                 Resetar busca
               </Button>
-              <Button mode='contained' style={styles.botaoBuscar} onPress={handleBuscar}>
+              <Button mode="contained" style={styles.botaoBuscar} onPress={handleBuscar}>
                 Buscar
               </Button>
             </View>
@@ -217,30 +224,42 @@ export default function Home({ usuarioLogado }: HomeProps) {
                 <View style={styles.viagemDescricao}>
                   <Title style={styles.viagemTitulo}>{viagem.titulo}</Title>
                   <View style={styles.viagemDetalhes}>
-                    <Text><Text style={styles.detalheTitulo}>Data de ida: </Text> {viagem.dataIda} </Text>
-                    <Text><Text style={styles.detalheTitulo}>Data de volta: </Text>{viagem.dataVolta} </Text>
-                    <Text><Text style={styles.detalheTitulo}>Origem: </Text> {viagem.origem} </Text>
-                    <Text><Text style={styles.detalheTitulo}>Destino: </Text> {viagem.destino} </Text>
-                    <Text><Text style={styles.detalheTitulo}>Tipo: </Text> {viagem.tipo === TipoViagem.ida ? 'ida' : 'ida e volta'} </Text>
+                    <Text>
+                      <Text style={styles.detalheTitulo}>Data de ida: </Text> {viagem.dataIda}{' '}
+                    </Text>
+                    <Text>
+                      <Text style={styles.detalheTitulo}>Data de volta: </Text>
+                      {viagem.dataVolta}{' '}
+                    </Text>
+                    <Text>
+                      <Text style={styles.detalheTitulo}>Origem: </Text> {viagem.origem}{' '}
+                    </Text>
+                    <Text>
+                      <Text style={styles.detalheTitulo}>Destino: </Text> {viagem.destino}{' '}
+                    </Text>
+                    <Text>
+                      <Text style={styles.detalheTitulo}>Tipo: </Text>{' '}
+                      {viagem.tipo === TipoViagem.ida ? 'ida' : 'ida e volta'}{' '}
+                    </Text>
                   </View>
                   <View style={styles.viagemValorContainer}>
                     <Text style={styles.viagemValor}>
-                      R$ {
-                        (viagem.valor * (tipo === TipoViagem.idaEVolta ? 2 : 1) * pessoas)
-                          .toFixed(2)
-                          .replace('.', ',')
-                      }
+                      R${' '}
+                      {(viagem.valor * (tipo === TipoViagem.idaEVolta ? 2 : 1) * pessoas)
+                        .toFixed(2)
+                        .replace('.', ',')}
                     </Text>
                   </View>
                 </View>
-                <Button mode='contained' style={styles.verDetalhes}> Ver detalhes </Button>
+                <Button mode="contained" style={styles.verDetalhes}>
+                  {' '}
+                  Ver detalhes{' '}
+                </Button>
               </Card>
             ))}
             {!ehUltimaPagina && (
               <Button onPress={carregarMais}>
-                <Text style={{ fontSize: 25 }}>
-                  Ver mais
-                </Text>
+                <Text style={{ fontSize: 25 }}>Ver mais</Text>
               </Button>
             )}
           </View>
@@ -249,13 +268,13 @@ export default function Home({ usuarioLogado }: HomeProps) {
           <Modal visible={buscando}>
             <View style={styles.buscandoContainer}>
               <Text style={styles.buscandoText}>
-                Aguarde uns instantes, estamos viajando o mundo das milhas para encontrar a melhor solução pra você!
+                Aguarde uns instantes, estamos viajando o mundo das milhas para encontrar a melhor
+                solução pra você!
               </Text>
               <Image source={loading} />
             </View>
           </Modal>
         </Portal>
-
       </ScrollView>
     </SafeAreaView>
   )

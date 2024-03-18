@@ -1,56 +1,65 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import uuid from "react-native-uuid";
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import uuid from 'react-native-uuid'
 
-import { cadastrarUsuario, logar as loginService } from "src/services/usuarios";
-import {
-  LoginUserPayloadInterface,
-  UserInitialStateInterface,
-} from "./interfaces";
-import { Usuario } from "src/types/usuario";
-import server from "assets/server";
+import { cadastrarUsuario, logar as loginService } from 'src/services/usuarios'
+import { LoginUserPayloadInterface, UserInitialStateInterface } from './interfaces'
+import { Usuario } from 'src/types/usuario'
+import server from 'assets/server'
 
 const initialState: UserInitialStateInterface = {
   loggedUser: undefined,
   users: server.usuarios,
-};
+}
 
 const userSlice = createSlice({
   initialState,
-  name: "user",
+  name: 'user',
   reducers: {
     login: (state, action: PayloadAction<LoginUserPayloadInterface>) => {
-      const payload = action.payload;
+      const payload = action.payload
 
       if (payload) {
-        const user = loginService(payload?.emailOrCpf, payload?.password);
+        const user = loginService(payload?.emailOrCpf, payload?.password)
 
         if (!user) {
-          throw Error("Invalid Email/CPF or password");
+          throw Error('Invalid Email/CPF or password')
         }
 
-        state.loggedUser = user;
+        state.loggedUser = user
       } else {
-        state.loggedUser = undefined;
+        state.loggedUser = undefined
       }
     },
     logout: (state) => {
-      state.loggedUser = undefined;
+      state.loggedUser = undefined
     },
-    register: (state, action: PayloadAction<Omit<Usuario, "id">>) => {
-      const id = uuid.v4();
-      const newUser = { ...action.payload, id };
+    register: (state, action: PayloadAction<Omit<Usuario, 'id'>>) => {
+      const id = uuid.v4()
+      const newUser = { ...action.payload, id }
 
       if (newUser.nome) {
-        state.loggedUser = newUser;
-        state.users.push(newUser);
+        state.loggedUser = newUser
+        state.users.push(newUser)
       } else {
-        throw Error("Invalid fields, please check and try again");
+        throw Error('Invalid fields, please check and try again')
       }
     },
+    update: (state, action: PayloadAction<Usuario>) => {
+      const updatedUser = action.payload
+      const index = state.users.findIndex((user) => user.id === updatedUser.id)
+
+      state.users[index] = updatedUser
+    },
+    remove: (state, action: PayloadAction<Usuario['id']>) => {
+      const index = state.users.findIndex((user) => user.id === action.payload)
+
+      state.users.splice(index, 1)
+      state.loggedUser = undefined
+    },
   },
-});
+})
 
-const userReducer = userSlice.reducer;
+const userReducer = userSlice.reducer
 
-export { userReducer };
-export const { login, logout, register } = userSlice.actions;
+export { userReducer }
+export const { login, logout, register, update, remove } = userSlice.actions

@@ -6,7 +6,7 @@ import { Genero } from 'src/types/usuario';
 
 interface GenderPickerProps {
   value: string | undefined,
-  onChange: Dispatch<SetStateAction<Genero | undefined>>,
+  onChange: Dispatch<Genero | undefined>,
 }
 
 const generos: Genero[] = ['Feminino', 'Masculino', 'Outro'];

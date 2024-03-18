@@ -1,38 +1,38 @@
-import { useState } from 'react';
-import { Text, View, Image, KeyboardAvoidingView } from 'react-native';
-import { Button, Card, TextInput, Title } from 'react-native-paper';
+import { useState } from 'react'
+import { Text, View, Image, KeyboardAvoidingView } from 'react-native'
+import { Button, Card, TextInput, Title } from 'react-native-paper'
+import { DrawerScreenProps } from '@react-navigation/drawer'
+import { useHeaderHeight } from '@react-navigation/elements'
+import { useDispatch } from 'react-redux'
 
-import { LoginProps } from './types';
+import useSnackbar from 'src/contexts/Snackbar'
 
-import useSnackbar from 'src/contexts/Snackbar';
+import banner from 'assets/login/banner.png'
+import icon from 'assets/login/icon.png'
+import styles from './styles'
+import { login } from 'src/store/slices/user'
+import { RootStackParamList } from 'src/routes'
 
-import banner from 'assets/login/banner.png';
-import icon from 'assets/login/icon.png';
-import styles from './styles';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { useDispatch } from 'react-redux';
-import { login } from 'src/store/slices/user';
+export default function Login({ navigation }: DrawerScreenProps<RootStackParamList, 'Login'>) {
+  const [emailOuCpf, setEmailOuCpf] = useState('')
+  const [senha, setSenha] = useState('')
+  const [mostrarSenha, setMostrarSenha] = useState(false)
 
-export default function Login({ navigation }: LoginProps) {
-  const [emailOuCpf, setEmailOuCpf] = useState('');
-  const [senha, setSenha] = useState('');
-  const [mostrarSenha, setMostrarSenha] = useState(false);
-
-  const { criarMensagem } = useSnackbar();
+  const { criarMensagem } = useSnackbar()
   const height = useHeaderHeight()
   const dispatch = useDispatch()
 
   const handleLogin = () => {
-    if (!emailOuCpf) return criarMensagem.erro('Preencha um Email ou CPF');
-    if (!senha) return criarMensagem.erro('Preencha sua senha');
+    if (!emailOuCpf) return criarMensagem.erro('Preencha um Email ou CPF')
+    if (!senha) return criarMensagem.erro('Preencha sua senha')
 
     try {
-      dispatch(login({emailOrCpf: emailOuCpf, password: senha}))
-      criarMensagem.sucesso('Login efetuado com sucesso!');
-      navigation.navigate('Home');
+      dispatch(login({ emailOrCpf: emailOuCpf, password: senha }))
+      criarMensagem.sucesso('Login efetuado com sucesso!')
+      navigation.navigate('Home')
     } catch (error) {
-      if(error instanceof Error) {
-        return criarMensagem.erro(error.message);
+      if (error instanceof Error) {
+        return criarMensagem.erro(error.message)
       }
     }
   }
@@ -40,7 +40,7 @@ export default function Login({ navigation }: LoginProps) {
   return (
     <View>
       <Image source={banner} style={styles.banner} />
-      <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={height + 50}>
+      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={height + 50}>
         <Card style={styles.card}>
           <View style={styles.loginContainer}>
             <Image source={icon} style={styles.icon} />
@@ -48,28 +48,28 @@ export default function Login({ navigation }: LoginProps) {
             <View style={styles.loginContent}>
               <View style={styles.loginForm}>
                 <TextInput
-                  label='Email ou CPF'
-                  autoCapitalize='none'
-                  mode='outlined'
+                  label="Email ou CPF"
+                  autoCapitalize="none"
+                  mode="outlined"
                   value={emailOuCpf}
                   onChangeText={setEmailOuCpf}
                 />
                 <TextInput
-                  label='Senha'
-                  mode='outlined'
+                  label="Senha"
+                  mode="outlined"
                   secureTextEntry={!mostrarSenha}
-                  right={<TextInput.Icon icon="eye" onPress={() => setMostrarSenha(!mostrarSenha)} />}
+                  right={
+                    <TextInput.Icon icon="eye" onPress={() => setMostrarSenha(!mostrarSenha)} />
+                  }
                   value={senha}
                   onChangeText={setSenha}
                 />
-                <Button mode='contained' onPress={handleLogin}>
+                <Button mode="contained" onPress={handleLogin}>
                   Acessar minha conta
                 </Button>
               </View>
             </View>
-            <Text style={styles.cadastrar}>
-              Ainda não possui sua conta?
-            </Text>
+            <Text style={styles.cadastrar}>Ainda não possui sua conta?</Text>
             <Text style={styles.cadastrarLink} onPress={() => navigation.navigate('Cadastrar')}>
               Clique aqui para se cadastrar!
             </Text>
