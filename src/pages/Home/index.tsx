@@ -13,7 +13,7 @@ import { filtrarViagens, filtrosEstaoVazios } from './utils/filtros'
 import banner from 'assets/home/banner.png'
 import loading from 'assets/loading.png'
 
-import { Filtros, HomeProps } from './types'
+import { Filtros } from './types'
 import StringPicker from 'src/components/StringPicker'
 import useSnackbar from 'src/contexts/Snackbar'
 
@@ -39,6 +39,7 @@ export default function Home() {
   const [filtrarPorUsuario, setFiltrarPorUsuario] = useState<Filtros['filtrarPorUsuario']>(
     valoresPadrao.filtrarPorUsuario
   )
+
   const { criarMensagem } = useSnackbar()
   const loggedUser = useSelector((state: RootState) => state.user.loggedUser)
 

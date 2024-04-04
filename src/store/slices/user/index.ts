@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import uuid from 'react-native-uuid'
 
-import { cadastrarUsuario, logar as loginService } from 'src/services/usuarios'
+import { findUser } from 'src/services/usuarios'
 import { LoginUserPayloadInterface, UserInitialStateInterface } from './interfaces'
 import { Usuario } from 'src/types/usuario'
 import server from 'assets/server'
@@ -19,7 +19,7 @@ const userSlice = createSlice({
       const payload = action.payload
 
       if (payload) {
-        const user = loginService(payload?.emailOrCpf, payload?.password)
+        const user = findUser(state.users, payload?.emailOrCpf, payload?.password)
 
         if (!user) {
           throw Error('Invalid Email/CPF or password')
@@ -49,6 +49,7 @@ const userSlice = createSlice({
       const index = state.users.findIndex((user) => user.id === updatedUser.id)
 
       state.users[index] = updatedUser
+      state.loggedUser = updatedUser
     },
     remove: (state, action: PayloadAction<Usuario['id']>) => {
       const index = state.users.findIndex((user) => user.id === action.payload)

@@ -4,7 +4,6 @@ import Login from './pages/Login'
 import Menu from './components/Menu'
 import DrawerContent from './components/DrawerContent'
 import Cadastrar from './pages/Cadastrar'
-import { Usuario } from './types/usuario'
 import Perfil from './pages/Perfil'
 
 export type RootStackParamList = {
