@@ -3,7 +3,7 @@ import { Viagem } from 'src/types/viagem'
 interface TravelInitialStateInterface {
   travels: Viagem[]
   currentPage: number
-  totalPages: number
+  pagesTotal: number
   isLoading: boolean
 }
 

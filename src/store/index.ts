@@ -14,7 +14,7 @@ const store = configureStore({
     travel: travelReducer,
     filters: filtersReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(...middlewares), // Apply default middlewares and add custom ones
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middlewares), // Apply default middlewares and add custom ones
 })
 
 export type RootState = ReturnType<typeof store.getState>

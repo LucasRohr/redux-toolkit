@@ -7,7 +7,6 @@ import DatePicker from 'src/components/DatePicker'
 
 import { TipoViagem, Viagem } from 'src/types/viagem'
 
-import { carregarDestinos, carregarOrigens, getViagens } from 'src/services/viagens'
 import { filtrarViagens, filtrosEstaoVazios } from './utils/filtros'
 
 import banner from 'assets/home/banner.png'
@@ -19,14 +18,12 @@ import useSnackbar from 'src/contexts/Snackbar'
 
 import styles from './styles'
 import { valoresPadrao } from './consts'
-import { useSelector } from 'react-redux'
-import { RootState } from 'src/store'
+import { useDispatch, useSelector } from 'react-redux'
+import store, { RootState } from 'src/store'
+import { loadTravelData } from 'src/store/slices/travel'
 
 export default function Home() {
-  const totalPaginasRef = useRef<number>(1)
   const todasAsViagens = useRef<Viagem[]>([])
-  const [paginaAtual, setPaginaAtual] = useState<number>(1)
-  const [viagens, setViagens] = useState<Viagem[]>([])
   const [origens, setOrigens] = useState<string[]>([])
   const [destinos, setDestinos] = useState<string[]>([])
   const [tipo, setTipo] = useState<Filtros['tipo']>(valoresPadrao.tipo)
@@ -35,13 +32,15 @@ export default function Home() {
   const [destino, setDestino] = useState<Filtros['destino']>(valoresPadrao.destino)
   const [dataIda, setDataIda] = useState<Filtros['dataIda']>(valoresPadrao.dataIda)
   const [dataVolta, setDataVolta] = useState<Filtros['dataVolta']>(valoresPadrao.dataVolta)
-  const [buscando, setBuscando] = useState<boolean>(false)
   const [filtrarPorUsuario, setFiltrarPorUsuario] = useState<Filtros['filtrarPorUsuario']>(
     valoresPadrao.filtrarPorUsuario
   )
-
   const { criarMensagem } = useSnackbar()
   const loggedUser = useSelector((state: RootState) => state.user.loggedUser)
+  const dispatch = useDispatch<typeof store.dispatch>()
+  const { travels, currentPage, pagesTotal, isLoading } = useSelector(
+    (state: RootState) => state.travel
+  )
 
   const { cidade = '', estado = '' } = loggedUser || {}
   const filtros: Filtros = {
@@ -56,7 +55,7 @@ export default function Home() {
   const mostrarTodasAsViagens = filtrarPorUsuario === 'todas'
   const mostrarViagensPorCidade = filtrarPorUsuario === 'cidade'
   const mostrarViagensPorEstado = filtrarPorUsuario === 'estado'
-  const ehUltimaPagina = paginaAtual === totalPaginasRef.current
+  const ehUltimaPagina = currentPage === pagesTotal
 
   const trocarOrigemDestino = () => {
     const tmp = origem
@@ -68,31 +67,12 @@ export default function Home() {
     setTipo((tipoAtual) => (novoTipo === tipoAtual ? undefined : novoTipo))
 
   const carregarMais = async () => {
-    setBuscando(true)
-    const { novasViagens, pagina } = await getViagens(paginaAtual + 1)
-    todasAsViagens.current = [...todasAsViagens.current, ...novasViagens]
-    startTransition(() => {
-      setPaginaAtual(pagina)
-      setViagens((viagensAtuais) => [...viagensAtuais, ...novasViagens])
-    })
-    setBuscando(false)
-  }
-
-  const carregarDados = async () => {
-    const [viagensData, novasOrigens, novosDestinos] = await Promise.all([
-      getViagens(),
-      carregarOrigens(),
-      carregarDestinos(),
-    ])
-    const { pagina, totalPaginas, novasViagens } = viagensData
-    totalPaginasRef.current = totalPaginas
-    todasAsViagens.current = novasViagens
-    startTransition(() => {
-      setPaginaAtual(pagina)
-      setViagens(novasViagens)
-      setOrigens(novasOrigens)
-      setDestinos(novosDestinos)
-    })
+    // const { novasViagens, pagina } = await getViagens(paginaAtual + 1)
+    // todasAsViagens.current = [...todasAsViagens.current, ...novasViagens]
+    // startTransition(() => {
+    //   setPaginaAtual(pagina)
+    //   setViagens((viagensAtuais) => [...viagensAtuais, ...novasViagens])
+    // }
   }
 
   const handleFiltrarPorUsuario = (novoFiltroPorUsuario: Filtros['filtrarPorUsuario']) => () => {
@@ -113,18 +93,15 @@ export default function Home() {
       setFiltrarPorUsuario(valoresPadrao.filtrarPorUsuario)
     })
 
-  useEffect(() => void carregarDados(), [])
+  useEffect(() => void dispatch(loadTravelData()), [])
 
   const handleBuscar = async () => {
-    setBuscando(true)
     let novasViagens = []
     const filtrosVazios = filtrosEstaoVazios(filtros)
     if (filtrosVazios) novasViagens = todasAsViagens.current
     else novasViagens = await filtrarViagens(todasAsViagens.current, filtros, cidade, estado)
-    setViagens(novasViagens)
     if (!novasViagens.length) return criarMensagem.erro('nenhuma viagem encontrada')
     if (!filtrosVazios) criarMensagem.sucesso(`${novasViagens.length} viagens encontradas`)
-    setBuscando(false)
   }
 
   return (
@@ -219,34 +196,34 @@ export default function Home() {
           </Card>
           <Title style={styles.viagensTitulo}> Promoções </Title>
           <View style={styles.viagens}>
-            {viagens.map((viagem, index) => (
+            {travels.map((travel, index) => (
               <Card key={index} style={styles.viagemContainer}>
-                <Image source={viagem.foto} style={styles.viagemImagem} />
+                <Image source={travel.foto} style={styles.viagemImagem} />
                 <View style={styles.viagemDescricao}>
-                  <Title style={styles.viagemTitulo}>{viagem.titulo}</Title>
+                  <Title style={styles.viagemTitulo}>{travel.titulo}</Title>
                   <View style={styles.viagemDetalhes}>
                     <Text>
-                      <Text style={styles.detalheTitulo}>Data de ida: </Text> {viagem.dataIda}{' '}
+                      <Text style={styles.detalheTitulo}>Data de ida: </Text> {travel.dataIda}{' '}
                     </Text>
                     <Text>
                       <Text style={styles.detalheTitulo}>Data de volta: </Text>
-                      {viagem.dataVolta}{' '}
+                      {travel.dataVolta}{' '}
                     </Text>
                     <Text>
-                      <Text style={styles.detalheTitulo}>Origem: </Text> {viagem.origem}{' '}
+                      <Text style={styles.detalheTitulo}>Origem: </Text> {travel.origem}{' '}
                     </Text>
                     <Text>
-                      <Text style={styles.detalheTitulo}>Destino: </Text> {viagem.destino}{' '}
+                      <Text style={styles.detalheTitulo}>Destino: </Text> {travel.destino}{' '}
                     </Text>
                     <Text>
                       <Text style={styles.detalheTitulo}>Tipo: </Text>{' '}
-                      {viagem.tipo === TipoViagem.ida ? 'ida' : 'ida e volta'}{' '}
+                      {travel.tipo === TipoViagem.ida ? 'ida' : 'ida e volta'}{' '}
                     </Text>
                   </View>
                   <View style={styles.viagemValorContainer}>
                     <Text style={styles.viagemValor}>
                       R${' '}
-                      {(viagem.valor * (tipo === TipoViagem.idaEVolta ? 2 : 1) * pessoas)
+                      {(travel.valor * (tipo === TipoViagem.idaEVolta ? 2 : 1) * pessoas)
                         .toFixed(2)
                         .replace('.', ',')}
                     </Text>
@@ -266,7 +243,7 @@ export default function Home() {
           </View>
         </View>
         <Portal>
-          <Modal visible={buscando}>
+          <Modal visible={isLoading}>
             <View style={styles.buscandoContainer}>
               <Text style={styles.buscandoText}>
                 Aguarde uns instantes, estamos viajando o mundo das milhas para encontrar a melhor
