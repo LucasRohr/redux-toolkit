@@ -18,6 +18,7 @@ const filtersSlice = createSlice({
         state.isLoading = true
       })
       .addCase(loadFiltersData.fulfilled, (state, { payload }) => {
+        state.isLoading = false
         state.origins = payload.origins
         state.destinations = payload.destinations
       })

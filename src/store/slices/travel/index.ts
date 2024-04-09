@@ -20,7 +20,7 @@ const travelSlice = createSlice({
       })
       .addCase(loadTravelData.fulfilled, (state, { payload }) => {
         state.isLoading = false
-        state.travels = payload.travels
+        state.travels.push(...payload.travels)
         state.currentPage = payload.currentPage
         state.pagesTotal = payload.pagesTotal
       })

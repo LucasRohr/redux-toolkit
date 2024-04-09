@@ -11,7 +11,7 @@ import DatePicker from 'src/components/DatePicker'
 import { TipoViagem, Viagem } from 'src/types/viagem'
 import StringPicker from 'src/components/StringPicker'
 import useSnackbar from 'src/contexts/Snackbar'
-import { loadTravelData } from 'src/store/middlewares'
+import { loadFiltersData, loadTravelData } from 'src/store/middlewares'
 
 import styles from './styles'
 import { valoresPadrao } from './consts'
@@ -70,13 +70,8 @@ export default function Home() {
   const trocarTipo = (novoTipo: TipoViagem) => () =>
     setTipo((tipoAtual) => (novoTipo === tipoAtual ? undefined : novoTipo))
 
-  const carregarMais = async () => {
-    // const { novasViagens, pagina } = await getViagens(paginaAtual + 1)
-    // todasAsViagens.current = [...todasAsViagens.current, ...novasViagens]
-    // startTransition(() => {
-    //   setPaginaAtual(pagina)
-    //   setViagens((viagensAtuais) => [...viagensAtuais, ...novasViagens])
-    // }
+  const carregarMais = () => {
+    dispatch(loadTravelData(currentPage))
   }
 
   const handleFiltrarPorUsuario = (novoFiltroPorUsuario: Filtros['filtrarPorUsuario']) => () => {
@@ -97,7 +92,10 @@ export default function Home() {
       setFiltrarPorUsuario(valoresPadrao.filtrarPorUsuario)
     })
 
-  useEffect(() => void dispatch(loadTravelData()), [])
+  useEffect(() => {
+    dispatch(loadTravelData())
+    dispatch(loadFiltersData())
+  }, [])
 
   const handleBuscar = async () => {
     let novasViagens = []
