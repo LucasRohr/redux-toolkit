@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { View, ScrollView } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux'
 import { Button, Card, Divider, TextInput, Title } from 'react-native-paper'
 import Icon from '@expo/vector-icons/MaterialIcons'
 import { DrawerScreenProps } from '@react-navigation/drawer'
@@ -12,9 +11,9 @@ import GenderPicker from 'src/components/GenderPicker'
 import { Usuario } from 'src/types/usuario'
 import useSnackbar from 'src/contexts/Snackbar'
 import theme from 'src/config/theme'
-import { RootState } from 'src/store'
 import { remove, update } from 'src/store/slices/user'
 import { RootStackParamList } from 'src/routes'
+import { useAppDispatch, useAppSelector } from 'src/hooks'
 
 export default function Perfil({ navigation }: DrawerScreenProps<RootStackParamList, 'Perfil'>) {
   const [userProfile, setUserProfile] = useState<EditProfileStateInterface>({
@@ -33,8 +32,8 @@ export default function Perfil({ navigation }: DrawerScreenProps<RootStackParamL
   const [confirmarSenha, setConfirmarSenha] = useState('')
 
   const { criarMensagem } = useSnackbar()
-  const dispatch = useDispatch()
-  const loggedUser = useSelector((state: RootState) => state.user.loggedUser)
+  const dispatch = useAppDispatch()
+  const loggedUser = useAppSelector((state) => state.user.loggedUser)
 
   useEffect(() => {
     if (loggedUser) {

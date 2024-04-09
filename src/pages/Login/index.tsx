@@ -3,7 +3,6 @@ import { Text, View, Image, KeyboardAvoidingView } from 'react-native'
 import { Button, Card, TextInput, Title } from 'react-native-paper'
 import { DrawerScreenProps } from '@react-navigation/drawer'
 import { useHeaderHeight } from '@react-navigation/elements'
-import { useDispatch } from 'react-redux'
 
 import useSnackbar from 'src/contexts/Snackbar'
 
@@ -12,6 +11,7 @@ import icon from 'assets/login/icon.png'
 import styles from './styles'
 import { login } from 'src/store/slices/user'
 import { RootStackParamList } from 'src/routes'
+import { useAppDispatch } from 'src/hooks'
 
 export default function Login({ navigation }: DrawerScreenProps<RootStackParamList, 'Login'>) {
   const [emailOuCpf, setEmailOuCpf] = useState('')
@@ -20,7 +20,7 @@ export default function Login({ navigation }: DrawerScreenProps<RootStackParamLi
 
   const { criarMensagem } = useSnackbar()
   const height = useHeaderHeight()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const handleLogin = () => {
     if (!emailOuCpf) return criarMensagem.erro('Preencha um Email ou CPF')

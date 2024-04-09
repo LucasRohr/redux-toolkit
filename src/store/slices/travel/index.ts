@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { TravelInitialStateInterface } from './interfaces'
-import { getViagens } from 'src/services/viagens'
+import { createSlice } from '@reduxjs/toolkit'
+import { TravelInitialStateInterface } from './types'
+import { loadTravelData } from 'src/store/middlewares'
 
 const initialState: TravelInitialStateInterface = {
   travels: [],
@@ -8,18 +8,6 @@ const initialState: TravelInitialStateInterface = {
   pagesTotal: 0,
   isLoading: false,
 }
-
-const loadTravelData = createAsyncThunk('travel/loadTravelData', async () => {
-  const travelData = await getViagens()
-
-  const { pagina, totalPaginas, novasViagens } = travelData
-
-  return {
-    currentPage: pagina,
-    pagesTotal: totalPaginas,
-    travels: novasViagens,
-  }
-})
 
 const travelSlice = createSlice({
   name: 'travel',

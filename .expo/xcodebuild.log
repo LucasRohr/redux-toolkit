@@ -14,6 +14,7 @@ note: Building targets in dependency order
 ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator16.4.sdk /Users/locacao/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator16.4-20E238-.sdkstatcache
     cd /Users/locacao/Documents/redux-toolkit/ios
     /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator16.4.sdk -o /Users/locacao/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator16.4-20E238-.sdkstatcache
+Base directory status changed. Regenerating...
 
 warning: Run script build phase '[CP-User] Generate app.config for prebuilt Constants.manifest' will be run during every build because it does not specify any outputs. To address this warning, either add output dependencies to the script phase, or configure it to run in every build by unchecking "Based on dependency analysis" in the script phase. (in target 'EXConstants' from project 'Pods')
 PhaseScriptExecution [CP-User]\ Generate\ app.config\ for\ prebuilt\ Constants.manifest /Users/locacao/Library/Developer/Xcode/DerivedData/jornadamilhas-gduajvdfekxcswdtktwkheqohnge/Build/Intermediates.noindex/Pods.build/Debug-iphonesimulator/EXConstants.build/Script-46EB2E00021B10.sh (in target 'EXConstants' from project 'Pods')

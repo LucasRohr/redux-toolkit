@@ -1,31 +1,26 @@
-import { startTransition, useEffect, useRef, useState } from 'react'
+import { startTransition, useEffect, useMemo, useRef, useState } from 'react'
 import { Image, SafeAreaView, ScrollView, Text, View } from 'react-native'
 import { Button, Card, Modal, Portal, Title, TouchableRipple } from 'react-native-paper'
 import { Picker } from '@react-native-picker/picker'
 import Icon from '@expo/vector-icons/Ionicons'
-import DatePicker from 'src/components/DatePicker'
-
-import { TipoViagem, Viagem } from 'src/types/viagem'
-
-import { filtrarViagens, filtrosEstaoVazios } from './utils/filtros'
 
 import banner from 'assets/home/banner.png'
 import loading from 'assets/loading.png'
 
-import { Filtros } from './types'
+import DatePicker from 'src/components/DatePicker'
+import { TipoViagem, Viagem } from 'src/types/viagem'
 import StringPicker from 'src/components/StringPicker'
 import useSnackbar from 'src/contexts/Snackbar'
+import { loadTravelData } from 'src/store/middlewares'
 
 import styles from './styles'
 import { valoresPadrao } from './consts'
-import { useDispatch, useSelector } from 'react-redux'
-import store, { RootState } from 'src/store'
-import { loadTravelData } from 'src/store/slices/travel'
+import { Filtros } from './types'
+import { filtrarViagens, filtrosEstaoVazios } from './utils/filtros'
+import { useAppDispatch, useAppSelector } from 'src/hooks'
 
 export default function Home() {
   const todasAsViagens = useRef<Viagem[]>([])
-  const [origens, setOrigens] = useState<string[]>([])
-  const [destinos, setDestinos] = useState<string[]>([])
   const [tipo, setTipo] = useState<Filtros['tipo']>(valoresPadrao.tipo)
   const [pessoas, setPessoas] = useState<Filtros['pessoas']>(valoresPadrao.pessoas)
   const [origem, setOrigem] = useState<Filtros['origem']>(valoresPadrao.origem)
@@ -36,11 +31,15 @@ export default function Home() {
     valoresPadrao.filtrarPorUsuario
   )
   const { criarMensagem } = useSnackbar()
-  const loggedUser = useSelector((state: RootState) => state.user.loggedUser)
-  const dispatch = useDispatch<typeof store.dispatch>()
-  const { travels, currentPage, pagesTotal, isLoading } = useSelector(
-    (state: RootState) => state.travel
-  )
+  const dispatch = useAppDispatch()
+
+  const loggedUser = useAppSelector((state) => state.user.loggedUser)
+  const { travels, currentPage, pagesTotal, isLoading } = useAppSelector((state) => state.travel)
+  const {
+    origins,
+    destinations,
+    isLoading: isLoadingFilters,
+  } = useAppSelector((state) => state.filters)
 
   const { cidade = '', estado = '' } = loggedUser || {}
   const filtros: Filtros = {
@@ -56,6 +55,11 @@ export default function Home() {
   const mostrarViagensPorCidade = filtrarPorUsuario === 'cidade'
   const mostrarViagensPorEstado = filtrarPorUsuario === 'estado'
   const ehUltimaPagina = currentPage === pagesTotal
+
+  const isLoadingContent = useMemo(
+    () => isLoading || isLoadingFilters,
+    [isLoading, isLoadingFilters]
+  )
 
   const trocarOrigemDestino = () => {
     const tmp = origem
@@ -145,7 +149,7 @@ export default function Home() {
                 onChangeText={setOrigem}
                 icon="airplane-takeoff"
                 style={[styles.origem, !mostrarTodasAsViagens && styles.inputDisabled]}
-                options={origens}
+                options={origins}
               />
               <TouchableRipple style={styles.trocar} onPress={trocarOrigemDestino}>
                 <Icon name="swap-vertical" size={20} color="white" />
@@ -156,7 +160,7 @@ export default function Home() {
                 onChangeText={setDestino}
                 icon="airplane-landing"
                 style={styles.destino}
-                options={destinos}
+                options={destinations}
               />
             </View>
             <View style={styles.datas}>
@@ -243,7 +247,7 @@ export default function Home() {
           </View>
         </View>
         <Portal>
-          <Modal visible={isLoading}>
+          <Modal visible={isLoadingContent}>
             <View style={styles.buscandoContainer}>
               <Text style={styles.buscandoText}>
                 Aguarde uns instantes, estamos viajando o mundo das milhas para encontrar a melhor

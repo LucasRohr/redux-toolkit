@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import uuid from 'react-native-uuid'
 
 import { findUser } from 'src/services/usuarios'
-import { LoginUserPayloadInterface, UserInitialStateInterface } from './interfaces'
+import { LoginUserPayloadInterface, UserInitialStateInterface } from './types'
 import { Usuario } from 'src/types/usuario'
 import server from 'assets/server'
 

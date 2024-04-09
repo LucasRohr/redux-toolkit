@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { View, Text, Image, ScrollView, Pressable } from 'react-native'
 import { Button, Card, Checkbox, TextInput, Title } from 'react-native-paper'
-import { useDispatch } from 'react-redux'
 import { DrawerScreenProps } from '@react-navigation/drawer'
 
 import { Genero, Usuario } from 'src/types/usuario'
@@ -14,6 +13,7 @@ import styles from './styles'
 import GenderPicker from 'src/components/GenderPicker'
 import { register } from 'src/store/slices/user'
 import { RootStackParamList } from 'src/routes'
+import { useAppDispatch } from 'src/hooks'
 
 export default function Cadastrar({
   navigation,
@@ -32,7 +32,7 @@ export default function Cadastrar({
   const [leu, setLeu] = useState(false)
 
   const { criarMensagem } = useSnackbar()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const handleSubmit = () => {
     if (!leu) return criarMensagem.erro('Você deve concordar com os termos de uso')

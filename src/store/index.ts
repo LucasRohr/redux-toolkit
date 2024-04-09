@@ -17,6 +17,4 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middlewares), // Apply default middlewares and add custom ones
 })
 
-export type RootState = ReturnType<typeof store.getState>
-
 export default store
