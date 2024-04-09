@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, isAnyOf } from '@reduxjs/toolkit'
 import { TravelInitialStateInterface } from './types'
 import { loadTravelData } from 'src/store/middlewares'
 
@@ -19,12 +19,11 @@ const travelSlice = createSlice({
         state.isLoading = true
       })
       .addCase(loadTravelData.fulfilled, (state, { payload }) => {
-        state.isLoading = false
         state.travels.push(...payload.travels)
         state.currentPage = payload.currentPage
         state.pagesTotal = payload.pagesTotal
       })
-      .addCase(loadTravelData.rejected, (state, _) => {
+      .addMatcher(isAnyOf(loadTravelData.fulfilled, loadTravelData.rejected), (state) => {
         state.isLoading = false
       })
   },

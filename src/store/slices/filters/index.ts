@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, isAnyOf } from '@reduxjs/toolkit'
 import { FiltersInitialStateInterface } from './types'
 import { loadFiltersData } from 'src/store/middlewares'
 
@@ -18,13 +18,15 @@ const filtersSlice = createSlice({
         state.isLoading = true
       })
       .addCase(loadFiltersData.fulfilled, (state, { payload }) => {
-        state.isLoading = false
         state.origins = payload.origins
         state.destinations = payload.destinations
       })
-      .addCase(loadFiltersData.rejected, (state) => {
-        state.isLoading = false
-      })
+      .addMatcher(
+        isAnyOf(loadFiltersData.fulfilled, loadFiltersData.rejected),
+        (state) => {
+          state.isLoading = false
+        }
+      )
   },
 })
 

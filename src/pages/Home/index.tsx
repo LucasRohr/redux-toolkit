@@ -5,7 +5,6 @@ import { Picker } from '@react-native-picker/picker'
 import Icon from '@expo/vector-icons/Ionicons'
 
 import banner from 'assets/home/banner.png'
-import loading from 'assets/loading.png'
 
 import DatePicker from 'src/components/DatePicker'
 import { TipoViagem, Viagem } from 'src/types/viagem'
@@ -251,7 +250,7 @@ export default function Home() {
                 Aguarde uns instantes, estamos viajando o mundo das milhas para encontrar a melhor
                 solução pra você!
               </Text>
-              <Image source={loading} />
+              <Image source={require('assets/buscando.gif')} style={styles.loadingGif} />
             </View>
           </Modal>
         </Portal>

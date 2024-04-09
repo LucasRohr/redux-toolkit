@@ -1,15 +1,15 @@
-import { StyleSheet } from "react-native";
-import theme from "src/config/theme";
+import { StyleSheet } from 'react-native'
+import theme from 'src/config/theme'
 
 const styles = StyleSheet.create({
   imageContainer: {
-    justifyContent: "center",
+    justifyContent: 'center',
     height: 400,
-    position: "relative",
-    width: "100%",
+    position: 'relative',
+    width: '100%',
   },
   bannerImage: {
-    width: "100%",
+    width: '100%',
   },
   content: {
     paddingHorizontal: 10,
@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   tipoContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   tipoIda: {
     borderColor: theme.colors.primary,
@@ -49,18 +49,18 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   origemContainer: {
-    width: "100%",
+    width: '100%',
   },
   origem: {
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
   },
   trocar: {
-    alignItems: "center",
+    alignItems: 'center',
     backgroundColor: theme.colors.primary,
     borderRadius: 0,
     height: 30,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   destino: {
     borderTopLeftRadius: 0,
@@ -72,12 +72,12 @@ const styles = StyleSheet.create({
   },
   viagemPor: {
     marginBottom: 10,
-    backgroundColor: theme.colors.secondary
+    backgroundColor: theme.colors.secondary,
   },
   buscarContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 50,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     marginTop: 10,
   },
   botaoResetarBusca: {
@@ -105,14 +105,14 @@ const styles = StyleSheet.create({
   viagemImagem: {
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    width: "100%",
+    width: '100%',
   },
   viagemDescricao: {
     gap: 15,
     padding: 20,
   },
   detalheTitulo: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   viagemTitulo: {
     color: theme.colors.primary,
@@ -127,12 +127,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   viagemValorContainer: {
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
   },
   viagemValor: {
     color: theme.colors.grey,
     fontSize: 25,
-    textAlign: "center",
+    textAlign: 'center',
   },
   inputDisabled: {
     opacity: 0.8,
@@ -147,7 +147,11 @@ const styles = StyleSheet.create({
   },
   buscandoText: {
     textAlign: 'center',
-  }
-});
+  },
+  loadingGif: {
+    width: 250,
+    height: 250,
+  },
+})
 
-export default styles;
+export default styles
