@@ -1,5 +1,5 @@
 # :package: redux-toolkit
-Redux Toolkit studies POC project based on a course made by Alura.
+React Native Redux Toolkit studies POC project based on a course made by Alura.
 
 Project main topics:
 
